@@ -61,7 +61,7 @@ jobs:
           kubectl expose service service-nodeapp --type=NodePort --port=3000 --name=service-nodeapp-ext
           minikube service list
           minikube service service-nodeapp --url
-          minikube service service-nodeapp-3000 --url
+          minikube service service-nodeapp-ext --url
 
       - name: Check for Deployements and Services
         run: |
