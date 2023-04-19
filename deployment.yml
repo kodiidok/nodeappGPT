@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: deployment-nodeapp
+  name: nodeappDeploy
   labels:
-    app: deploy-app
+    app: nodeapp
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: deploy-app
+      app: nodeapp
   template:
     metadata:
       labels:
-        app: deploy-app 
+        app: nodeapp 
     spec:
       containers:
       - name: nodeserver
-        image: kodiidok/deploy-app:latest
+        image: kodiidok/nodeapp:latest
         ports:
         - containerPort: 3000
