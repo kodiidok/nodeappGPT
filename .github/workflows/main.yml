@@ -53,4 +53,14 @@ jobs:
       - name: Deploy to Kubernetes
         run: |-
           kubectl set image deployment/nodeapp nodeapp=${{secrets.DOCKER_USERNAME}}/${{env.IMAGE}}:${{github.sha}}
-          kubectl expose deployment ${{env.IMAGE}} --type=LoadBalancer --port=3000 --name=${{env.IMAGE}}-3000 --dry-run=client -o yaml | kubectl apply -f -
+          kubectl apply -f deployment.yml
+
+      - name: Wait for deployments to be ready
+        run: |
+          while [[ $(kubectl get deployments --output 'jsonpath={.items[*].status.readyReplicas}' | tr ' ' '\n' | paste -sd+ | bc) -ne 1 ]]; do
+            echo "Waiting for deployments to be ready..."
+            sleep 10
+          done
+
+      - name: Apply Service
+        run: kubectl apply -f service.yml    
