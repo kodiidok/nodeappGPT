@@ -50,24 +50,7 @@ jobs:
       - name: Install Auth Plugin
         run: gcloud components install gke-gcloud-auth-plugin
 
-      - name: Check for Clusters
-        run: kubectl get pods -A
-
-      - name: Deploy to Minikube
-        run: kubectl apply -f deployment.yml
-
-      - name: Check for Deployements and Services
+      - name: Deploy to Kubernetes
         run: |-
-          kubectl get deployments
-          kubectl get pods
-          kubectl get svc
-
-      - name: Wait for deployments to be ready
-        run: |-
-          while [[ $(kubectl get deployments --output 'jsonpath={.items[*].status.readyReplicas}' | tr ' ' '\n' | paste -sd+ | bc) -ne 1 ]]; do
-            echo "Waiting for deployments to be ready..."
-            sleep 10
-          done
-
-      - name: Apply Service
-        run: kubectl apply -f service.yml
+          kubectl create deployment ${{env.IMAGE}} --image=${{secrets.DOCKER_USERNAME}}/${{env.IMAGE}}:${{github.sha}}
+          kubectl expose deployment ${{env.IMAGE}} --type=NodePort --port=3000 --name=${{env.IMAGE}}-3000 --dry-run=client -o yaml | kubectl apply -f -
