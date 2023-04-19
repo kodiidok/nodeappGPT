@@ -1,4 +1,4 @@
-name: Deploy to Minikube
+name: Publish Docker Image to Registry and Deploy
 
 on:
   push:
@@ -30,23 +30,39 @@ jobs:
           docker tag deploy-app ${{ secrets.DOCKER_USERNAME }}/deploy-app:${{ github.sha }}
           docker push ${{ secrets.DOCKER_USERNAME }}/deploy-app:${{ github.sha }}
 
-      - name: Set up Kubernetes context
-        uses: Azure/k8s-set-context@v1
-        with:
-          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+      - name: Start minikube
+        uses: medyagh/setup-minikube@master
+
+      - name: Check for Clusters
+        run: kubectl get pods -A
 
       - name: Deploy to Minikube
         run: kubectl apply -f deployment.yml
 
-      - name: Create Service
-        run: kubectl apply -f service.yml
-
-      - name: Wait for deployment to be ready
+      - name: Check for Deployements and Services
         run: |
-          while [[ $(kubectl get deployments deployment-nodeapp --output 'jsonpath={.status.readyReplicas}') != "1" ]]; do
-            echo "Waiting for deployment to be ready..."
+          kubectl get deployments
+          kubectl get pods
+          kubectl get svc
+
+      - name: Wait for deployments to be ready
+        run: |
+          while [[ $(kubectl get deployments --output 'jsonpath={.items[*].status.readyReplicas}' | tr ' ' '\n' | paste -sd+ | bc) -ne 1 ]]; do
+            echo "Waiting for deployments to be ready..."
             sleep 10
           done
 
+      - name: Apply Service
+        run: kubectl apply -f service.yml
+
       - name: Test Service URLs
-        run: minikube service list
+        run: |
+          minikube service list
+          kubectl expose deployment deployment-nodeapp --type=NodePort --port=3000 --name=service-nodeapp-ext --dry-run=client -o yaml | kubectl apply -f -
+          minikube service list
+
+      - name: Check for Deployements and Services
+        run: |
+          kubectl get deployments
+          kubectl get pods
+          kubectl get svc
