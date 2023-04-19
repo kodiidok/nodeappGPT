@@ -11,7 +11,7 @@ env:
   GKE_ZONE: us-central1
   DEPLOYMENT_NAME: deployment-nodeapp
   IMAGE: deploy-app
-  TAG: ${{ github.sha }}
+  TAG: latest
 
 jobs:
   push_to_registry:
