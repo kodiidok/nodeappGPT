@@ -53,4 +53,4 @@ jobs:
       - name: Deploy to Kubernetes
         run: |-
           kubectl create deployment ${{env.IMAGE}} --image=${{secrets.DOCKER_USERNAME}}/${{env.IMAGE}}:${{github.sha}}
-          kubectl expose deployment ${{env.IMAGE}} --type=NodePort --port=3000 --name=${{env.IMAGE}}-3000 --dry-run=client -o yaml | kubectl apply -f -
+          kubectl expose deployment ${{env.IMAGE}} --type=LoadBalancer --port=3000 --name=${{env.IMAGE}}-3000 --dry-run=client -o yaml | kubectl apply -f -
