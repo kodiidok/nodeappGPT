@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: nodeapp-container
-        image: gcr.io/dogwood-method-347907/nodeapp:${{GITHUB_SHA}}
+        image: gcr.io/dogwood-method-347907/nodeapp:$GITHUB_SHA
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
