@@ -73,4 +73,7 @@ jobs:
     # Deploy the Docker image to the GKE cluster
     - name: Deploy
       run: |-
+        gcloud components install gke-gcloud-auth-plugin
         kubectl apply -f ${{ github.workspace }}/.github/manifests/deployment.yaml
+        kubectl rollout status deployment/${{ env.DEPLOYMENT_NAME }}
+        kubectl get services -o wide
