@@ -57,7 +57,6 @@ jobs:
     # Push the Docker image to DockerHub
     - name: Publish
       run: |-
-        docker tag "${{ env.IMAGE }}:${{ github.sha }}" "${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE }}:${{ github.sha }}"
         docker push "${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE }}:${{ github.sha }}"
 
     # Set up kustomize
