@@ -79,5 +79,8 @@ jobs:
     # Rollout Deployment
     - name: Rollout Deployment Status
       run: |-
-        kubectl rollout status deployment/${{ env.DEPLOYMENT_NAME }}
+        while [[ $(kubectl get deployments --output 'jsonpath={.items[*].status.readyReplicas}' | tr ' ' '\n' | paste -sd+ | bc) -ne 1 ]]; do
+          echo "Waiting for deployments to be ready..."
+          sleep 10
+        done
         kubectl get services -o wide
