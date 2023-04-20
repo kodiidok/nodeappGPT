@@ -53,14 +53,4 @@ jobs:
       - name: Deploy to Kubernetes
         run: |-
           kubectl create deployment ${{env.DEPLOYMENT_NAME}} --image=${{secrets.DOCKER_USERNAME}}/${{env.IMAGE}}:${{github.sha}}
-          kubectl apply -f deployment.yml
-
-      - name: Wait for deployments to be ready
-        run: |
-          while [[ $(kubectl get deployments --output 'jsonpath={.items[*].status.readyReplicas}' | tr ' ' '\n' | paste -sd+ | bc) -ne 1 ]]; do
-            echo "Waiting for deployments to be ready..."
-            sleep 10
-          done
-
-      - name: Apply Service
-        run: kubectl apply -f service.yml    
+          kubectl apply -f nodeapp-service-deployment.yml
