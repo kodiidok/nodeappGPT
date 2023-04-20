@@ -52,5 +52,5 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: |-
-          kubectl create deployment ${{env.DEPLOYMENT_NAME}} --image=${{secrets.DOCKER_USERNAME}}/${{env.IMAGE}}:${{github.sha}}
+          kubectl create deployment ${{env.DEPLOYMENT_NAME}} --image=${{secrets.DOCKER_USERNAME}}/${{env.IMAGE}}:${{github.sha}} --save-config
           kubectl apply -f nodeapp-service-deployment.yml
