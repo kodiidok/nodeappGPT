@@ -12,8 +12,8 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT_ID }}
-  GKE_CLUSTER: cluster0    # Add your cluster name here.
-  GKE_ZONE: us-central1   # Add your cluster zone here.
+  GKE_CLUSTER: cluster1    # Add your cluster name here.
+  GKE_ZONE: us-central1-c   # Add your cluster zone here.
   DEPLOYMENT_NAME: nodeapp # Add your deployment name here.
   IMAGE: nodeapp
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -79,8 +79,5 @@ jobs:
     # Rollout Deployment
     - name: Rollout Deployment Status
       run: |-
-        while [[ $(kubectl get deployments --output 'jsonpath={.items[*].status.readyReplicas}' | tr ' ' '\n' | paste -sd+ | bc) -ne 1 ]]; do
-          echo "Waiting for deployments to be ready..."
-          sleep 10
-        done
+        kubectl rollout status deployment/nodeapp
         kubectl get services -o wide
