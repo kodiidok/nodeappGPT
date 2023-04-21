@@ -11,37 +11,37 @@ const app = express();
  * These lines of code are connecting to a MongoDB database using the `mongoose` library. The `mongoose.connect()` method is used to establish a connection to the MongoDB database specified in the `MONGO_URI` environment variable. The `useNewUrlParser` and `useUnifiedTopology` options are passed to the method to ensure that the connection is established using the latest MongoDB driver.
  * Once the connection is established, the `mongoose` library can be used to define and interact with database models. 
  * */
-const mongoose = require('mongoose');
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+// const mongoose = require('mongoose');
+// mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 /**
  * These lines of code are defining a Mongoose schema for the `Response` model. The `mongoose.Schema` method is used to create a new schema object, which is then used to define the structure of the `Response` model. The schema defines five properties: `prompt`, `status`, `created`, `message`, and `total_tokens`, each with a specified data type. 
  * */
-const Schema = mongoose.Schema;
-const responseSchema = new Schema({
-    prompt: { type: String },
-    status: { type: String },
-    created: { type: Number },
-    message: { type: String },
-    total_tokens: { type: Number }
-});
-const Response = mongoose.model("Response", responseSchema);
+// const Schema = mongoose.Schema;
+// const responseSchema = new Schema({
+//     prompt: { type: String },
+//     status: { type: String },
+//     created: { type: Number },
+//     message: { type: String },
+//     total_tokens: { type: Number }
+// });
+// const Response = mongoose.model("Response", responseSchema);
 
 /**
  * The function creates and saves an API response and returns the saved data.
  * @param apiResponse - It is an object that represents the response received from an API call. The function takes this object and saves it to a database using the `.save()` method.
  * @returns The function `createAndSaveResponse` is returning a promise that resolves to the saved data if the save operation is successful, or rejects with an error if the save operation fails.
  * */
-const createAndSaveResponse = (apiResponse) => {
-    return apiResponse.save()
-        .then((savedData) => {
-            return savedData;
-        })
-        .catch((err) => {
-            console.error(err);
-            throw err;
-    });
-};
+// const createAndSaveResponse = (apiResponse) => {
+//     return apiResponse.save()
+//         .then((savedData) => {
+//             return savedData;
+//         })
+//         .catch((err) => {
+//             console.error(err);
+//             throw err;
+//     });
+// };
 
 /**
  * `app.use(express.static('public'))` is serving static files from the `public` directory. This means that any files in the `public` directory can be accessed by the client by specifying the file path in the URL. For example, if there is a file named `style.css` in the `public` directory, it can be accessed by the client at `http://localhost:3000/style.css`.
@@ -86,15 +86,24 @@ app.post('/inputMsg', async (req, res) => {
             }
         }
     };
-    const apiResponse = new Response({
+    // const apiResponse = new Response({
+    //     prompt: parcel,
+    //     status: 'recieved',
+    //     created: response.data.created,
+    //     message: response.data.choices[0].message.content,
+    //     total_tokens: response.data.usage.total_tokens
+    // });
+    // console.log(apiResponse);
+    // createAndSaveResponse(apiResponse);
+    const apiResponse = {
+        _id: 'r123456',
         prompt: parcel,
         status: 'recieved',
         created: response.data.created,
         message: response.data.choices[0].message.content,
         total_tokens: response.data.usage.total_tokens
-    });
+    };
     console.log(apiResponse);
-    createAndSaveResponse(apiResponse);
     res.status(200).send(apiResponse);
 })
 

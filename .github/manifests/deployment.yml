@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nodeapp
+  name: nodeapp-deployment
   labels:
     app: nodeapp
 spec:
@@ -13,53 +13,56 @@ spec:
     metadata:
       labels:
         app: nodeapp
+        env: development
     spec:
       containers:
       - name: nodeapp-container
-        image: kodiidok/nodeapp:latest
+        image: gcr.io/vigilant-brace-384215/nodeapp:latest
+        imagePullPolicy: Always
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 3000
-          initialDelaySeconds: 5
-          timeoutSeconds: 5
-          periodSeconds: 5
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: nodeapp-service
-  labels:
-    app: nodeapp
-spec:
-  ports:
-  - port: 3000
-    targetPort: 3000
-  selector:
-    app: nodeapp
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: nodeapp-ingress
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      more_set_headers "X-Frame-Options: Deny";
-      more_set_headers "X-Xss-Protection: 1; mode=block";
-      more_set_headers "X-Content-Type-Options: nosniff";
-spec:
-  rules:
-  - host: localhost
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: nodeapp-service
-            port:
-              number: 3000
+        env:
+        - name: PORT
+          value: "3000"
+        - name: LOG_LEVEL
+          value: "info"
+        - name: NODE_ENV
+          value: "development"
+
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: nodeapp-service
+#   labels:
+#     app: nodeapp
+# spec:
+#   ports:
+#   - port: 3000
+#     targetPort: 3000
+#     protocol: HTTP
+#   selector:
+#     app: nodeapp
+
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: nodeapp-ingress
+#   annotations:
+#     kubernetes.io/ingress.class: nginx
+#     nginx.ingress.kubernetes.io/configuration-snippet: |
+#       more_set_headers "X-Frame-Options: Deny";
+#       more_set_headers "X-Xss-Protection: 1; mode=block";
+#       more_set_headers "X-Content-Type-Options: nosniff";
+# spec:
+#   rules:
+#   - host: localhost
+#     http:
+#       paths:
+#       - path: /
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: nodeapp-service
+#             port:
+#               number: 3000
