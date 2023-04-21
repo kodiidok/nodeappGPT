@@ -7,7 +7,7 @@
   "scripts": {
     "test": "jest --no-cache --detectOpenHandles --runInBand --forceExit",
     "start": "node server/server.js",
-    "dev": "nodemon server/demo.js",
+    "dev": "nodemon server/server.js",
     "demo": "nodemon server/demo.js"
   },
   "keywords": [],
