@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: nodeapp-container
-        image: kodiidok/nodeapp:${{ github.sha }}
+        image: kodiidok/nodeapp:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
