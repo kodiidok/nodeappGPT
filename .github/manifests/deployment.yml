@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: nodeapp-container
-        image: gcr.io/vigilant-brace-384215/nodeapp:1.0.0
+        image: gcr.io/vigilant-brace-384215/nodeapp:latest
         imagePullPolicy: Always
         imagePullPolicy: Always
         ports:
