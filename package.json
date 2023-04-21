@@ -6,7 +6,7 @@
   "main": "server.js",
   "scripts": {
     "test": "jest --no-cache --detectOpenHandles --runInBand --forceExit",
-    "start": "node server/demo.js",
+    "start": "node server/server.js",
     "dev": "nodemon server/demo.js",
     "demo": "nodemon server/demo.js"
   },

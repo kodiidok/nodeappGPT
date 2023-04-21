@@ -5,9 +5,9 @@ metadata:
   labels:
     app: nodeapp
 spec:
-  ports:
-  - port: 3000
-    targetPort: 3000
-    protocol: HTTP
+  type: LoadBalancer
+  - name: http
+    port: 80
+    targetPort: 8080
   selector:
     app: nodeapp
